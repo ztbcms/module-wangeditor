@@ -45,9 +45,24 @@ class Index extends BaseController
 
     /**
      * demo（主键）
-     * @return \think\response\View
+     * @return \think\response\Json|\think\response\View
      */
     public function demo2(){
+        $_action = input('_action');
+        if($_action == 'details') {
+            //获取详情
+            return json(self::createReturn(true,[
+                'mini_text' => cache('mini_text'),
+                'h5_text' => cache('h5_text')
+            ]));
+        }
+
+        if($_action == 'submit') {
+            //提交
+            cache('mini_text',input('mini_text','','trim'));
+            cache('h5_text',input('h5_text','','trim'));
+            return json(self::createReturn(true));
+        }
         return view();
     }
 

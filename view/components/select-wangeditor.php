@@ -4,7 +4,7 @@
 
 <script type="text/x-template" id="select-wangeditor">
     <div class="select-wangeditor">
-        <div style="width:390px;" :id="marking"></div>
+        <div style="width:100%;" :id="marking"></div>
     </div>
 </script>
 
@@ -14,12 +14,6 @@
         Vue.component('select-wangeditor', {
             template: '#select-wangeditor',
             props: {
-                editor : {
-                    type: [Object],
-                    default: function () {
-                        return []
-                    }
-                },
                 marking : {
                     type: [String],
                     default: function () {
@@ -41,7 +35,6 @@
             },
             data: function () {
                 return {
-                    text : '',
                     is_initialization : false
                 }
             },
@@ -67,6 +60,8 @@
                     that.editor = new E('#'+this.marking);
 
                     that.editor.config.height = 500;
+
+                    //菜单显示
                     that.editor.config.menus = [
                         'head',
                         'bold',
@@ -157,7 +152,7 @@
                 //同步去父组件
                 changeValue: function () {
                     this.text = this.editor.txt.html();
-                    this.$emit('change', this.text)
+                    this.$emit('change',this.text,this.marking)
                 },
                 //图片上传
                 onUploadedImage: function (event) {

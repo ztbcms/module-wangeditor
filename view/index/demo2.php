@@ -2,13 +2,26 @@
     <div id="app" style="padding: 8px;" v-cloak>
         <div>
             <el-card>
-                <h3>上传示例</h3>
+                <h3>手机</h3>
+                <div style="margin-top: 15px;width: 390px;">
                 <select-wangeditor
-                      marking="div1"
-                      :text="text"
+                      marking="mini_text"
+                      :text="mini_text"
                       @change="wangeditorChange"
                 >
                 </select-wangeditor>
+                </div>
+
+                <h3>H5</h3>
+                <div style="margin-top: 15px;">
+                    <select-wangeditor
+                            marking="h5_text"
+                            :text="h5_text"
+                            @change="wangeditorChange"
+                    >
+                    </select-wangeditor>
+                </div>
+
 
                 <el-button style="margin-top: 15px;" type="primary" @click="onSubmit">
                     提交
@@ -23,21 +36,27 @@
             new Vue({
                 el: '#app',
                 data: {
-                    text : ''
+                    mini_text : '',
+                    h5_text : ''
                 },
                 mounted: function () {
                     this.getDetails();
                 },
                 methods: {
-                    wangeditorChange : function (text) {
-                        this.text = text;
+                    wangeditorChange : function (text,marking) {
+                        if(marking === 'mini_text') {
+                            this.mini_text = text;
+                        }
+                        if(marking === 'h5_text') {
+                            this.h5_text = text;
+                        }
                     },
                     onSubmit : function () {
                         var that = this;
-                        var text =  that.text
-                        var url = '{:api_url("/wangeditor/index/demo")}';
+                        var url = '{:api_url("/wangeditor/index/demo2")}';
                         var data = {
-                            text : text,
+                            mini_text : that.mini_text,
+                            h5_text : that.h5_text,
                             _action : 'submit'
                         };
                         that.httpPost(url, data, function (res) {
@@ -52,13 +71,14 @@
                     },
                     getDetails : function () {
                         var that = this;
-                        var url = '{:api_url("/wangeditor/index/demo")}';
+                        var url = '{:api_url("/wangeditor/index/demo2")}';
                         var data = {
                             _action : 'details'
                         };
                         that.httpPost(url, data, function (res) {
                             if (res.status) {
-                                that.text = res.data.text;
+                                that.mini_text = res.data.mini_text;
+                                that.h5_text = res.data.h5_text;
                             }
                         });
                     },
