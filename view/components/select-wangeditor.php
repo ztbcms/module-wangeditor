@@ -35,17 +35,13 @@
             },
             data: function () {
                 return {
-                    is_initialization : false
+                    is_initialization : false,
                 }
             },
             mounted: function () {
                 window.addEventListener('ZTBCMS_UPLOAD_IMAGE', this.onUploadedImage.bind(this));
                 window.addEventListener('ZTBCMS_UPLOAD_VIDEO', this.onUploadedVideo.bind(this));
                 this.seteditor()
-            },
-            beforeDestroy:function (){
-                console.log('beforeDestroy',this.text);
-                this.editor.txt.html(this.text)
             },
             methods: {
                 //初始化项目
@@ -100,6 +96,7 @@
                         }
                         // 菜单点击事件
                         clickHandler() {
+                            window.sessionStorage.setItem("file_editor_id",that.editor.id);
                             layer.open({
                                 type: 2,
                                 title: '',
@@ -125,6 +122,7 @@
                         }
                         // 菜单点击事件
                         clickHandler() {
+                            window.sessionStorage.setItem("file_editor_id",that.editor.id);
                             layer.open({
                                 type: 2,
                                 title: '',
@@ -159,13 +157,15 @@
                     var that = this;
                     var files = event.detail.files;
                     if (files) {
-                        files.map(function (item) {
-                            that.editor.cmd.do(
-                                "insertHTML",
-                                `<p data-we-empty-p=""><img src="` + item.fileurl + `" style="max-width:100%;" contenteditable="false"></p>`
-                            );
-                        })
-                        that.changeValue();
+                        if(that.editor.id === window.sessionStorage.getItem("file_editor_id")) {
+                            files.map(function (item) {
+                                that.editor.cmd.do(
+                                    "insertHTML",
+                                    `<p data-we-empty-p=""><img src="` + item.fileurl + `" style="max-width:100%;" contenteditable="false"></p>`
+                                );
+                            })
+                            that.changeValue();
+                        }
                     }
                 },
                 //视频上传
@@ -173,14 +173,16 @@
                     var that = this;
                     var files = event.detail.files;
                     if (files) {
-                        files.map(function (item) {
-                            that.editor.cmd.do(
-                                "insertHTML",
-                                `<p data-we-empty-p="">
+                        if(that.editor.id === window.sessionStorage.getItem("file_editor_id")) {
+                            files.map(function (item) {
+                                that.editor.cmd.do(
+                                    "insertHTML",
+                                    `<p data-we-empty-p="">
                                         <video src="` + item.fileurl + `" controls="controls" contenteditable="false" style="max-width:100%;" ></p>`
-                            );
-                        })
-                        that.changeValue();
+                                );
+                            })
+                            that.changeValue();
+                        }
                     }
                 },
                 //批量复制
